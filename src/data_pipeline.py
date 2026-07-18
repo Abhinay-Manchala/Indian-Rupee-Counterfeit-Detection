@@ -1,61 +1,95 @@
+"""
+Dataset Split Module
+
+This module splits the processed dataset into training and testing sets.
+A percentage of images from each category is moved from the training
+folder to the testing folder.
+"""
+
 import os
-import shutil
 import random
+import shutil
 
-# Source folder
-SOURCE_FOLDER = "dataset/processed/train"
+from config import (
+    TRAIN_DATASET_PATH,
+    TEST_DATASET_PATH,
+    TEST_RATIO,
+    RANDOM_SEED
+)
 
-# Destination folder
-DESTINATION_FOLDER = "dataset/processed/test"
 
-# Test ratio
-TEST_RATIO = 0.20
+def split_dataset():
+    """
+    Split the processed dataset into training and testing sets.
 
-print("=" * 60)
-print("Dataset Split (80% Train | 20% Test)")
-print("=" * 60)
+    A fixed percentage of images is moved from the training folder
+    to the testing folder while preserving the folder structure.
+    """
 
-random.seed(42)
+    print("=" * 60)
+    print("Dataset Split (80% Train | 20% Test)")
+    print("=" * 60)
 
-for category in os.listdir(SOURCE_FOLDER):
+    random.seed(RANDOM_SEED)
 
-    category_path = os.path.join(SOURCE_FOLDER, category)
+    total_train = 0
+    total_test = 0
 
-    if not os.path.isdir(category_path):
-        continue
+    for category in os.listdir(TRAIN_DATASET_PATH):
 
-    for denomination in os.listdir(category_path):
+        category_path = os.path.join(TRAIN_DATASET_PATH, category)
 
-        train_folder = os.path.join(category_path, denomination)
+        if not os.path.isdir(category_path):
+            continue
 
-        test_folder = os.path.join(
-            DESTINATION_FOLDER,
-            category,
-            denomination
-        )
+        for denomination in os.listdir(category_path):
 
-        os.makedirs(test_folder, exist_ok=True)
+            train_folder = os.path.join(category_path, denomination)
 
-        images = os.listdir(train_folder)
+            if not os.path.isdir(train_folder):
+                continue
 
-        random.shuffle(images)
+            test_folder = os.path.join(
+                TEST_DATASET_PATH,
+                category,
+                denomination
+            )
 
-        test_size = int(len(images) * TEST_RATIO)
+            os.makedirs(test_folder, exist_ok=True)
 
-        test_images = images[:test_size]
+            images = os.listdir(train_folder)
 
-        for image in test_images:
+            random.shuffle(images)
 
-            src = os.path.join(train_folder, image)
-            dst = os.path.join(test_folder, image)
+            test_size = int(len(images) * TEST_RATIO)
 
-            shutil.move(src, dst)
+            test_images = images[:test_size]
 
-        print(f"\n{category}/{denomination}")
-        print(f"Total Images     : {len(images)}")
-        print(f"Moved to Test    : {test_size}")
-        print(f"Remaining Train  : {len(images) - test_size}")
+            for image_name in test_images:
 
-print("\n" + "=" * 60)
-print("Dataset Split Completed Successfully!")
-print("=" * 60)
+                source_path = os.path.join(train_folder, image_name)
+                destination_path = os.path.join(test_folder, image_name)
+
+                shutil.move(source_path, destination_path)
+
+            train_count = len(images) - test_size
+
+            total_train += train_count
+            total_test += test_size
+
+            print(f"\nCategory          : {category}/{denomination}")
+            print(f"Total Images      : {len(images)}")
+            print(f"Training Images   : {train_count}")
+            print(f"Testing Images    : {test_size}")
+
+    print("\n" + "=" * 60)
+    print("Dataset Split Summary")
+    print("=" * 60)
+    print(f"Total Training Images : {total_train}")
+    print(f"Total Testing Images  : {total_test}")
+    print("Dataset Split Completed Successfully!")
+    print("=" * 60)
+
+
+if __name__ == "__main__":
+    split_dataset()

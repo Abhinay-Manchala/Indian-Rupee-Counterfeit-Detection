@@ -1,3 +1,10 @@
+"""
+CNN Model Module
+
+This module defines the Convolutional Neural Network (CNN) architecture
+used to classify Indian currency notes as Real or Fake.
+"""
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import (
     Input,
@@ -8,30 +15,74 @@ from tensorflow.keras.layers import (
     Dropout,
 )
 
-# Create CNN Model
-model = Sequential([
-    Input(shape=(224, 224, 3)),
+from config import INPUT_SHAPE
 
-    Conv2D(32, (3, 3), activation="relu"),
-    MaxPooling2D((2, 2)),
+def build_model():
+    """
+    Build and compile the CNN model.
 
-    Conv2D(64, (3, 3), activation="relu"),
-    MaxPooling2D((2, 2)),
+    Returns:
+        tensorflow.keras.Model: Compiled CNN model.
+    """
 
-    GlobalAveragePooling2D(),
+    model = Sequential([
 
-    Dense(128, activation="relu"),
-    Dropout(0.5),
+        # Input layer
+        Input(shape=INPUT_SHAPE),
 
-    Dense(1, activation="sigmoid")
-])
+        # First Convolution Block
+        Conv2D(
+            filters=32,
+            kernel_size=(3, 3),
+            activation="relu"
+        ),
+        MaxPooling2D(pool_size=(2, 2)),
 
-# Compile Model
-model.compile(
-    optimizer="adam",
-    loss="binary_crossentropy",
-    metrics=["accuracy"]
-)
+        # Second Convolution Block
+        Conv2D(
+            filters=64,
+            kernel_size=(3, 3),
+            activation="relu"
+        ),
+        MaxPooling2D(pool_size=(2, 2)),
 
-# Display Model Summary
-model.summary()
+        # Feature Extraction
+        GlobalAveragePooling2D(),
+
+        # Fully Connected Layer
+        Dense(
+            units=128,
+            activation="relu"
+        ),
+
+        # Dropout Layer
+        Dropout(0.5),
+
+        # Output Layer
+        Dense(
+            units=1,
+            activation="sigmoid"
+        )
+    ])
+
+    # Compile the model
+    model.compile(
+        optimizer="adam",
+        loss="binary_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model
+
+
+if __name__ == "__main__":
+
+    cnn_model = build_model()
+
+    print("=" * 50)
+    print("CNN Model Summary")
+    print("=" * 50)
+
+    cnn_model.summary()
+
+    print("=" * 50)
