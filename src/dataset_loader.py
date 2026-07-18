@@ -7,18 +7,18 @@ TEST_PATH = "dataset/processed/test"
 
 IMG_SIZE = 224
 
+classes = {
+    "fake": 0,
+    "real": 1
+}
+
 
 def load_dataset(folder_path):
 
     images = []
     labels = []
 
-    classes = {
-        "fake": 0,
-        "real": 1
-    }
-
-    for category in classes:
+    for category, label in classes.items():
 
         category_path = os.path.join(folder_path, category)
 
@@ -40,8 +40,11 @@ def load_dataset(folder_path):
 
                 image = cv2.resize(image, (IMG_SIZE, IMG_SIZE))
 
+                # Normalize pixel values
+                image = image.astype("float32") / 255.0
+
                 images.append(image)
-                labels.append(classes[category])
+                labels.append(label)
 
     return np.array(images), np.array(labels)
 
@@ -61,3 +64,8 @@ print()
 
 print("Testing Images  :", X_test.shape)
 print("Testing Labels  :", y_test.shape)
+
+print()
+print("Pixel Value Range")
+print("Minimum :", X_train.min())
+print("Maximum :", X_train.max())
