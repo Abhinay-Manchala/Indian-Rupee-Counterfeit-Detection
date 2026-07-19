@@ -24,3 +24,10 @@ CLASS_LABELS = {
     "fake": 0,
     "real": 1
 }
+
+# Training configuration
+EPOCHS = 20
+BATCH_SIZE = 32
+
+# Model save path
+MODEL_SAVE_PATH = "models/best_model.keras"
