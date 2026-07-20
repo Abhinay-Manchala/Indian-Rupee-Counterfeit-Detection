@@ -31,3 +31,10 @@ BATCH_SIZE = 32
 
 # Model save path
 MODEL_SAVE_PATH = "models/best_model.keras"
+
+# Prediction configuration
+PREDICTION_IMAGE_PATH = "sample_images/sample.jpg"
+CLASS_NAMES = ["Fake", "Real"]
+
+# Prediction threshold
+CONFIDENCE_THRESHOLD = 0.5
