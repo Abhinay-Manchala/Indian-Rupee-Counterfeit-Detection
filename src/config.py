@@ -37,4 +37,4 @@ PREDICTION_IMAGE_PATH = "sample_images/sample.jpg"
 CLASS_NAMES = ["Fake", "Real"]
 
 # Prediction threshold
-CONFIDENCE_THRESHOLD = 0.5
+CONFIDENCE_THRESHOLD = 0.60

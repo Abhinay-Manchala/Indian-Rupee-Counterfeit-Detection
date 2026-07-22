@@ -1,19 +1,17 @@
 """
 Prediction Module
 
-This module performs inference using the trained CNN model.
-
-Workflow:
-1. Load the trained CNN model.
-2. Load the input currency note image.
-3. Preprocess the image for prediction.
-4. Predict whether the note is Real or Fake.
-5. Display the prediction result with confidence score.
+Loads the trained CNN model and performs
+prediction on an input currency note image.
 """
 
 import numpy as np
 
-from tensorflow.keras.models import load_model, Sequential
+from tensorflow.keras.models import (
+    load_model,
+    Sequential,
+)
+
 from tensorflow.keras.preprocessing import image
 
 from config import (
@@ -29,27 +27,26 @@ def load_prediction_model() -> Sequential:
     """
     Load the trained CNN model.
 
-    Returns:
-        Sequential: Loaded TensorFlow CNN model.
+    Returns
+    -------
+    Sequential
+        Loaded TensorFlow model.
     """
 
-    print("=" * 50)
-    print("Loading Model...")
-    print("=" * 50)
-
     try:
-        model = load_model(MODEL_SAVE_PATH)
 
-        print("Model Loaded Successfully!\n")
+        model = load_model(
+            MODEL_SAVE_PATH
+        )
+
+        print("\nModel Loaded Successfully!\n")
 
         return model
 
-    except FileNotFoundError:
-        print("Error: Model file not found.")
-        raise
-
     except Exception as error:
-        print(f"Error loading model: {error}")
+
+        print(f"\nError loading model: {error}")
+
         raise
 
 
@@ -57,38 +54,39 @@ def preprocess_image(
     image_path: str
 ) -> np.ndarray:
     """
-    Load and preprocess an image for prediction.
+    Load and preprocess an image.
 
-    Args:
-        image_path (str): Path to the input image.
+    Parameters
+    ----------
+    image_path : str
 
-    Returns:
-        np.ndarray: Preprocessed image ready for prediction.
+    Returns
+    -------
+    np.ndarray
     """
 
-    print("=" * 50)
-    print("Loading Image...")
-    print("=" * 50)
-
     try:
+
         img = image.load_img(
             image_path,
             target_size=IMAGE_SIZE
         )
 
-        print("Image Loaded Successfully!\n")
-
-    except FileNotFoundError:
-        print("Error: Image file not found.")
-        raise
-
     except Exception as error:
-        print(f"Error loading image: {error}")
+
+        print(f"\nError loading image: {error}")
+
         raise
 
-    img_array = image.img_to_array(img)
+    img_array = image.img_to_array(
+        img
+    )
 
-    img_array = img_array / 255.0
+    img_array = img_array.astype(
+        "float32"
+    )
+
+    img_array /= 255.0
 
     img_array = np.expand_dims(
         img_array,
@@ -97,30 +95,40 @@ def preprocess_image(
 
     return img_array
 
-
 def get_prediction_result(
     confidence: float,
 ) -> tuple[str, float]:
     """
-    Determine the prediction result from the confidence score.
+    Determine prediction result.
 
-    Args:
-        confidence (float): Raw confidence score produced by the model.
+    Parameters
+    ----------
+    confidence : float
 
-    Returns:
-        tuple[str, float]:
-            - Predicted class (Real or Fake).
-            - Confidence score as a percentage.
+    Returns
+    -------
+    tuple[str, float]
     """
 
     if confidence >= CONFIDENCE_THRESHOLD:
+
         predicted_class = CLASS_NAMES[1]
         confidence_score = confidence * 100
+
     else:
+
         predicted_class = CLASS_NAMES[0]
         confidence_score = (1 - confidence) * 100
 
-    return predicted_class, confidence_score
+    confidence_score = round(
+        confidence_score,
+        2
+    )
+
+    return (
+        predicted_class,
+        confidence_score
+    )
 
 
 def predict_note(
@@ -128,27 +136,31 @@ def predict_note(
     processed_image: np.ndarray,
 ) -> tuple[str, float]:
     """
-    Predict whether the currency note is Real or Fake.
+    Predict whether the note is Real or Fake.
 
-    Args:
-        model (Sequential): Loaded CNN model.
-        processed_image (np.ndarray): Preprocessed input image.
+    Parameters
+    ----------
+    model : Sequential
 
-    Returns:
-        tuple[str, float]:
-            - Predicted class (Real or Fake).
-            - Confidence score as a percentage.
+    processed_image : np.ndarray
+
+    Returns
+    -------
+    tuple[str, float]
     """
 
-    print("=" * 50)
-    print("Predicting...")
-    print("=" * 50)
+    prediction = model.predict(
+        processed_image,
+        verbose=0
+    )
 
-    prediction = model.predict(processed_image)
+    confidence = float(
+        prediction[0][0]
+    )
 
-    confidence = float(prediction[0][0])
-
-    return get_prediction_result(confidence)
+    return get_prediction_result(
+        confidence
+    )
 
 
 def display_prediction(
@@ -156,30 +168,19 @@ def display_prediction(
     confidence_score: float,
 ) -> None:
     """
-    Display the prediction result.
-
-    Args:
-        predicted_class (str): Predicted class label.
-        confidence_score (float): Prediction confidence percentage.
-
-    Returns:
-        None
+    Display only the prediction result.
     """
 
-    print("\nPrediction Completed!\n")
-
+    print("\n" + "=" * 50)
+    print("Prediction Result")
     print("=" * 50)
     print(f"Prediction : {predicted_class}")
-    print(f"Confidence : {confidence_score:.2f}%")
     print("=" * 50)
 
 
 def main() -> None:
     """
-    Execute the complete prediction workflow.
-
-    Returns:
-        None
+    Execute prediction workflow.
     """
 
     model = load_prediction_model()
