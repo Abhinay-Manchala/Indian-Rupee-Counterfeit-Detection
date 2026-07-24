@@ -2,23 +2,23 @@
 
 ## 📖 Overview
 
-The **Indian Rupee Counterfeit Detection System** is a Machine Learning and Computer Vision project developed to classify Indian currency notes as **Real** or **Fake**.
+The **Indian Rupee Counterfeit Detection System** is a Machine Learning and Computer Vision project developed to classify Indian currency notes as **Real** or **Fake** using a Convolutional Neural Network (CNN).
 
-Currently, the project supports **₹100** and **₹500** currency notes. Images are preprocessed, organized into training and testing datasets, and prepared for a Convolutional Neural Network (CNN) model built using TensorFlow and Keras.
-
-This repository currently includes all work completed up to **Day 5**, including dataset preparation, preprocessing, data loading, and CNN model development.
+The system currently supports **₹100** and **₹500** currency notes. It performs image preprocessing using OpenCV and classifies notes through both **image-based prediction** and **real-time webcam detection**. The project is built using TensorFlow/Keras and follows a modular structure for easy maintenance and future enhancements.
 
 ---
 
-## ✨ Features Completed
+## ✨ Features
 
-- Dataset organization for ₹100 and ₹500 notes
+- Classification of ₹100 and ₹500 currency notes
 - Image preprocessing using OpenCV
-- Image resizing to **224 × 224**
-- Dataset splitting (80% Training / 20% Testing)
-- Image normalization (pixel values scaled to 0–1)
-- Custom CNN architecture using TensorFlow/Keras
-- Clean project structure for future development
+- Custom CNN model built with TensorFlow/Keras
+- Image prediction from uploaded images
+- Real-time webcam prediction
+- Automatic Region of Interest (ROI) for note detection
+- Configurable confidence threshold for binary classification
+- Model evaluation using accuracy, confusion matrix, and classification report
+- Clean and modular project structure
 
 ---
 
@@ -48,11 +48,16 @@ Indian-Rupee-Counterfeit-Detection/
 ├── notebooks/
 ├── results/
 ├── screenshots/
+│
 ├── src/
-│   ├── preprocess.py
+│   ├── camera.py
+│   ├── config.py
 │   ├── data_pipeline.py
 │   ├── dataset_loader.py
-│   └── model.py
+│   ├── model.py
+│   ├── predict.py
+│   ├── preprocess.py
+│   └── train.py
 │
 ├── README.md
 ├── requirements.txt
@@ -63,37 +68,66 @@ Indian-Rupee-Counterfeit-Detection/
 
 ## 📊 Dataset
 
-The dataset contains images of Indian currency notes categorized as:
+The dataset consists of Indian currency note images categorized into:
 
 - Real ₹100
 - Fake ₹100
 - Real ₹500
 - Fake ₹500
 
-The dataset is preprocessed by resizing all images to **224 × 224** pixels before being split into training and testing sets.
+All images are preprocessed by resizing them to **224 × 224** pixels and normalized before being used for model training and testing.
 
 ---
 
-## 🚀 Current Project Status
+## 🚀 Project Status
 
-**Completed (Day 1–Day 5)**
+### Completed
 
-- Project setup
 - Dataset collection and organization
 - Image preprocessing
-- Dataset splitting
 - Dataset loading pipeline
-- CNN model architecture
-
-**Upcoming Work**
-
+- CNN model development
 - Model training
-- Performance evaluation
-- Confusion matrix
-- Classification report
-- Prediction module
-- Webcam integration
-- Streamlit web application
+- Model evaluation
+- Image prediction module
+- Real-time webcam prediction
+- Project testing and optimization
 
 ---
 
+## ⚠️ Challenges Faced
+
+- Collecting a balanced dataset for real and fake currency notes
+- Handling lighting variations during webcam detection
+- Improving prediction stability in real-time video
+- Optimizing image preprocessing for better classification
+- Selecting an appropriate confidence threshold for binary classification
+
+---
+
+## 📈 Results
+
+The trained CNN model successfully classifies Indian ₹100 and ₹500 currency notes as **Real** or **Fake** using both uploaded images and live webcam input.
+
+The project includes:
+
+- Accuracy evaluation
+- Confusion Matrix
+- Classification Report
+- Real-time prediction using OpenCV
+
+---
+
+## 🔮 Future Enhancements
+
+- Support additional Indian currency denominations
+- Improve model accuracy using a larger and more diverse dataset
+- Develop a mobile application for real-time detection
+- Deploy the application as a web-based solution
+- Integrate explainable AI techniques such as Grad-CAM
+
+---
+
+## 📌 Note
+
+This project is developed for educational and research purposes to demonstrate the application of Machine Learning and Computer Vision in counterfeit currency detection.

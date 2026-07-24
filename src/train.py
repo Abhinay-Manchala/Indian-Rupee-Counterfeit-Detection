@@ -11,10 +11,15 @@ This script:
 
 import json
 
-from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
+from tensorflow.keras.callbacks import (
+    EarlyStopping,
+    ModelCheckpoint,
+)
+from tensorflow.keras.callbacks import History
 
 from dataset_loader import load_dataset
 from model import build_model
+
 from config import (
     TRAIN_DATASET_PATH,
     TEST_DATASET_PATH,
@@ -24,8 +29,15 @@ from config import (
 )
 
 
-def train_model():
-    """Train the CNN model."""
+def train_model() -> History:
+    """
+    Train the CNN model.
+
+    Returns
+    -------
+    History
+        Training history returned by Keras.
+    """
 
     print("=" * 50)
     print("Loading Dataset...")
@@ -75,8 +87,16 @@ def train_model():
     )
 
     # Save training history
-    with open("results/training_history.json", "w") as file:
-        json.dump(history.history, file, indent=4)
+    with open(
+        "results/training_history.json",
+        "w",
+        encoding="utf-8",
+    ) as file:
+        json.dump(
+            history.history,
+            file,
+            indent=4,
+        )
 
     print("\nTraining history saved successfully!")
     print(f"Model saved to: {MODEL_SAVE_PATH}")

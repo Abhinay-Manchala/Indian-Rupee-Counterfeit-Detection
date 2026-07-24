@@ -70,11 +70,11 @@ def start_webcam() -> None:
         return
 
     print("Webcam Started Successfully!")
-    print("Place the entire note inside the green box.")
+    print("Place the entire note inside the highlighted box.")
     print("Press 'Q' to Exit.\n")
 
     prediction_text = "Waiting..."
-    confidence_text = ""
+    roi_color = (0, 255, 255)   # Yellow while waiting
 
     frame_count = 0
 
@@ -88,20 +88,20 @@ def start_webcam() -> None:
         height, width, _ = frame.shape
 
         # Slightly larger ROI
-        roi_width = 460
-        roi_height = 220
+        ROI_WIDTH = 460
+        ROI_HEIGHT = 220
 
-        x1 = (width - roi_width) // 2
-        y1 = (height - roi_height) // 2
+        x1 = (width - ROI_WIDTH) // 2
+        y1 = (height - ROI_HEIGHT) // 2
 
-        x2 = x1 + roi_width
-        y2 = y1 + roi_height
+        x2 = x1 + ROI_WIDTH
+        y2 = y1 + ROI_HEIGHT
 
         cv2.rectangle(
             frame,
             (x1, y1),
             (x2, y2),
-            (0, 255, 0),
+            roi_color,
             3
         )
 
@@ -111,7 +111,7 @@ def start_webcam() -> None:
             (x1 + 15, y1 - 15),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.8,
-            (0, 255, 0),
+            roi_color,
             2
         )
 
@@ -124,7 +124,7 @@ def start_webcam() -> None:
 
             if note_present(roi):
 
-                # Improve brightness & contrast
+                # Enhance ROI before CNN prediction
                 enhanced_roi = cv2.convertScaleAbs(
                     roi,
                     alpha=1.15,
@@ -140,27 +140,28 @@ def start_webcam() -> None:
 
                 confidence = float(prediction[0][0])
 
-                predicted_class, confidence_score = get_prediction_result(
+                predicted_class, _ = get_prediction_result(
                     confidence
                 )
 
                 prediction_text = f"Prediction : {predicted_class}"
-                confidence_text = ""
 
             else:
 
                 prediction_text = "No Note Detected"
-                confidence_text = ""
 
-        # Text color
+        # Update text color and ROI color
         if "Real" in prediction_text:
             color = (0, 255, 0)
+            roi_color = (0, 255, 0)
 
         elif "Fake" in prediction_text:
             color = (0, 0, 255)
+            roi_color = (0, 0, 255)
 
         else:
             color = (0, 255, 255)
+            roi_color = (0, 255, 255)
 
         cv2.putText(
             frame,
@@ -172,6 +173,15 @@ def start_webcam() -> None:
             2
         )
 
+        cv2.putText(
+            frame,
+            "Press Q to Exit",
+            (20, 80),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (255, 255, 255),
+            2
+        )
 
         cv2.imshow(
             "Indian Rupee Counterfeit Detection System",

@@ -165,10 +165,9 @@ def predict_note(
 
 def display_prediction(
     predicted_class: str,
-    confidence_score: float,
 ) -> None:
     """
-    Display only the prediction result.
+    Display the prediction result in the console.
     """
 
     print("\n" + "=" * 50)
@@ -189,14 +188,13 @@ def main() -> None:
         PREDICTION_IMAGE_PATH
     )
 
-    predicted_class, confidence_score = predict_note(
+    predicted_class, _ = predict_note(
         model,
         processed_image
     )
 
     display_prediction(
-        predicted_class,
-        confidence_score
+        predicted_class
     )
 
 

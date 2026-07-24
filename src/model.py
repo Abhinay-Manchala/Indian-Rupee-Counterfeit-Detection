@@ -17,17 +17,20 @@ from tensorflow.keras.layers import (
 
 from config import INPUT_SHAPE
 
-def build_model():
+
+def build_model() -> Sequential:
     """
     Build and compile the CNN model.
 
-    Returns:
-        tensorflow.keras.Model: Compiled CNN model.
+    Returns
+    -------
+    Sequential
+        Compiled CNN model.
     """
 
     model = Sequential([
 
-        # Input layer
+        # Input Layer
         Input(shape=INPUT_SHAPE),
 
         # First Convolution Block
@@ -65,7 +68,6 @@ def build_model():
         )
     ])
 
-    # Compile the model
     model.compile(
         optimizer="adam",
         loss="binary_crossentropy",
