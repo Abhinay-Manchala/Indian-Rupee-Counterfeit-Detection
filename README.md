@@ -127,6 +127,19 @@ The project includes:
 - Integrate explainable AI techniques such as Grad-CAM
 
 ---
+## 🖥️ Output Screenshots
+
+### ₹100 Real Note
+
+![₹100 Real Note](screenshots/real_100_webcam.png)
+
+### ₹500 Real Note
+
+![₹500 Real Note](screenshots/real_500_webcam.png)
+
+### Fake Currency Detection
+
+![Fake Currency Detection](screenshots/fake_note_webcam.png)
 
 ## 📌 Note
 
